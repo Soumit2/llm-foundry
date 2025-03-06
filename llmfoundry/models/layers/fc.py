@@ -1,14 +1,45 @@
 # Copyright 2022 MosaicML LLM Foundry authors
 # SPDX-License-Identifier: Apache-2.0
 
-from torch import nn
+import torch
+import torch.nn as nn
 
 from llmfoundry.layers_registry import fcs
 
-fcs.register('torch', func=nn.Linear)
+class BandLinear(nn.Module):
+    def __init__(self, in_features, out_features):
+        super().__init__()
+        self.in_features = in_features
+        self.out_features = out_features
+        self.bandwidth = 1
+        self.bias = True
+
+        self.weight = nn.Parameter(torch.randn(out_features, in_features) * 0.01)
+        self.bias = nn.Parameter(torch.zeros(out_features)) if bias else None
+
+        self.register_buffer("mask", self.create_band_mask())
+
+    def create_band_mask(self):
+        """Creates a binary mask for the band matrix structure."""
+        mask = torch.zeros(self.out_features, self.in_features)
+        for i in range(self.out_features):
+            for j in range(self.in_features):
+                if abs(i - j) <= self.bandwidth:  # Keep elements in the band
+                    mask[i, j] = 1
+        return mask
+
+    def forward(self, x):
+        masked_weight = self.weight * self.mask  # Enforce band structure
+        output = x @ masked_weight.T  # Standard matrix multiplication
+        if self.bias is not None:
+            output += self.bias
+        return output    
+
+# Register BandLinear in fcs registry
+fcs.register('band', func=BandLinear)
 
 try:
     import transformer_engine.pytorch as te
     fcs.register('te', func=te.Linear)
-except:
+except ImportError:
     pass
