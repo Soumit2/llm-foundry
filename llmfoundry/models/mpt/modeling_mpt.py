@@ -1038,7 +1038,8 @@ class MPTModel(MPTPreTrainedModel):
     # Activation Checkpointing
     def activation_checkpointing_fn(self, module: nn.Module) -> bool:
         return isinstance(module, MPTBlock)
-
+    
+    print(sum(p.numel() for p in model.parameters())   # number of model parameters
 
 class MPTForCausalLM(MPTPreTrainedModel):
 
