@@ -1,13 +1,13 @@
-max_seq_len: 2048
+max_seq_len: 768
 # global_seed: 17
 model:
   name: mpt_causal_lm
   init_device: meta
-  d_model: 1024
+  d_model: 768
   n_heads: 16
   n_layers: 24
   expansion_ratio: 4
-  max_seq_len: 2048
+  max_seq_len: 768
   vocab_size: 50368
   loss_fn: torch_crossentropy
   attn_config:
@@ -15,14 +15,14 @@ model:
 tokenizer:
   name: EleutherAI/gpt-neox-20b
   kwargs:
-    model_max_length: 2048
+    model_max_length: 768
 train_loader:
   name: text
   dataset:
     local: /home/jupyter/llm-foundry4/WM_M_data/train
     split: train
     shuffle: true
-    max_seq_len: 2048
+    max_seq_len: 768
     shuffle_seed: 17
   drop_last: true
   num_workers: 8
@@ -32,7 +32,7 @@ eval_loader:
     local: /home/jupyter/llm-foundry4/WM_M_data/val
     split: valid
     shuffle: false
-    max_seq_len: 2048
+    max_seq_len: 768
     shuffle_seed: 17
   drop_last: false
   num_workers: 8
@@ -56,9 +56,9 @@ max_duration: 3ep
 eval_interval: 1
 eval_first: false
 eval_subset_num_batches: -1
-global_train_batch_size: 192
+global_train_batch_size: 1
 seed: 17
-device_eval_batch_size: 8
+device_eval_batch_size: 1
 device_train_microbatch_size: auto
 precision: amp_bf16
 fsdp_config:
