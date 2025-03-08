@@ -2,17 +2,25 @@
 # SPDX-License-Identifier: Apache-2.0
 
 import torch
-import torch.nn as nn
+from torch import nn
 
 from llmfoundry.layers_registry import fcs
 
+fcs.register('torch', func=nn.Linear)
+
+try:
+    import transformer_engine.pytorch as te
+    fcs.register('te', func=te.Linear)
+except:
+    pass
+
 class BandLinear(nn.Module):
-    def __init__(self, in_features, out_features):
+    def __init__(self, in_features, out_features, bandwidth=1, bias=True):
         super().__init__()
         self.in_features = in_features
         self.out_features = out_features
-        self.bandwidth = 1
-        self.bias = True
+        self.bandwidth = bandwidth
+        self.bias = bias
 
         self.weight = nn.Parameter(torch.randn(out_features, in_features) * 0.01)
         self.bias = nn.Parameter(torch.zeros(out_features)) if bias else None
@@ -33,13 +41,6 @@ class BandLinear(nn.Module):
         output = x @ masked_weight.T  # Standard matrix multiplication
         if self.bias is not None:
             output += self.bias
-        return output    
+        return output
 
-# Register BandLinear in fcs registry
-fcs.register('band', func=BandLinear)
-
-try:
-    import transformer_engine.pytorch as te
-    fcs.register('te', func=te.Linear)
-except ImportError:
-    pass
+fcs.register('BandLinear', func=BandLinear)
