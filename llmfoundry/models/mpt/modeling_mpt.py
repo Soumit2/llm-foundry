@@ -1038,8 +1038,6 @@ class MPTModel(MPTPreTrainedModel):
     # Activation Checkpointing
     def activation_checkpointing_fn(self, module: nn.Module) -> bool:
         return isinstance(module, MPTBlock)
-    
-    print(sum(p.numel() for p in model.parameters()))   # number of model parameters
 
 class MPTForCausalLM(MPTPreTrainedModel):
 
@@ -1079,6 +1077,7 @@ class MPTForCausalLM(MPTPreTrainedModel):
                     )
             self.logit_scale = logit_scale
         self.final_logit_softcapping = config.final_logit_softcapping
+        print(f'Number of model parameters: {sum(p.numel() for p in self.parameters())}')
 
     @property
     def backbone_model_class(self) -> type[MPTModel]:
