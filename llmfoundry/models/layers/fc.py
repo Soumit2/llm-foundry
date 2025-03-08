@@ -3,45 +3,46 @@
 
 import torch
 from torch import nn
-
 from llmfoundry.layers_registry import fcs
 
-fcs.register('torch', func=nn.Linear)
+class BandMatrix(nn.Module):
+    """A custom Band Matrix layer that retains only a banded structure."""
 
-try:
-    import transformer_engine.pytorch as te
-    fcs.register('te', func=te.Linear)
-except:
-    pass
-
-class BandLinear(nn.Module):
-    def __init__(self, in_features, out_features, bandwidth=1, bias=True, **kwargs):
+    def __init__(self, in_features: int, out_features: int, bandwidth: int):
+        """
+        Args:
+            in_features (int): Number of input features.
+            out_features (int): Number of output features.
+            bandwidth (int): Maximum number of diagonals to retain.
+        """
         super().__init__()
         self.in_features = in_features
         self.out_features = out_features
         self.bandwidth = bandwidth
-        self.bias = bias
 
-        self.weight = nn.Parameter(torch.randn(out_features, in_features) * 0.01)
-        self.bias_param = nn.Parameter(torch.zeros(out_features)) if bias else None
+        # Learnable weight matrix
+        self.weight = nn.Parameter(torch.randn(out_features, in_features))
 
-        self.register_buffer("mask", self.create_band_mask())
+        # Mask to enforce banded structure
+        self.register_buffer("band_mask", self.create_band_mask())
 
     def create_band_mask(self):
-        """Creates a binary mask for the band matrix structure."""
+        """Creates a binary mask to enforce the band matrix structure."""
         mask = torch.zeros(self.out_features, self.in_features)
         for i in range(self.out_features):
-            for j in range(self.in_features):
-                if abs(i - j) <= self.bandwidth:  # Keep elements in the band
-                    mask[i, j] = 1
+            for j in range(max(0, i - self.bandwidth), min(self.in_features, i + self.bandwidth + 1)):
+                mask[i, j] = 1
         return mask
 
     def forward(self, x):
-        masked_weight = self.weight * self.mask  # Enforce band structure
-        output = x @ masked_weight.T  # Standard matrix multiplication
-        if self.bias_param is not None:
-            output += self.bias_param
-        return output
+        """
+        Applies the band matrix transformation.
+        Args:
+            x (Tensor): Input tensor of shape (batch, in_features).
+        Returns:
+            Tensor: Transformed output of shape (batch, out_features).
+        """
+        return torch.matmul(x, (self.weight * self.band_mask).T)
 
-fcs.register('BandLinear', func=BandLinear)
-   
+# Register the BandMatrix layer in fcs
+fcs.register('bandmatrix', func=BandMatrix)
