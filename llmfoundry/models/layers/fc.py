@@ -15,7 +15,7 @@ except:
     pass
 
 class BandLinear(nn.Module):
-    def __init__(self, in_features, out_features, bandwidth=1, bias=True):
+    def __init__(self, in_features, out_features, bandwidth=1, bias=True, **kwargs):
         super().__init__()
         self.in_features = in_features
         self.out_features = out_features
@@ -23,7 +23,7 @@ class BandLinear(nn.Module):
         self.bias = bias
 
         self.weight = nn.Parameter(torch.randn(out_features, in_features) * 0.01)
-        self.bias = nn.Parameter(torch.zeros(out_features)) if bias else None
+        self.bias_param = nn.Parameter(torch.zeros(out_features)) if bias else None
 
         self.register_buffer("mask", self.create_band_mask())
 
@@ -39,8 +39,9 @@ class BandLinear(nn.Module):
     def forward(self, x):
         masked_weight = self.weight * self.mask  # Enforce band structure
         output = x @ masked_weight.T  # Standard matrix multiplication
-        if self.bias is not None:
-            output += self.bias
+        if self.bias_param is not None:
+            output += self.bias_param
         return output
 
 fcs.register('BandLinear', func=BandLinear)
+   
