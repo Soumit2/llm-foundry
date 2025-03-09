@@ -545,7 +545,7 @@ class GroupedQueryAttention(nn.Module):
                 fc_kwargs=fc_type,
             )
             self.Wk = build_fc(
-                name='BandLinear'
+                name='BandLinear',
                 in_features=self.kv_dim,
                 out_features=self.kv_n_heads * self.head_dim,
                 fc_kwargs=fc_type,
