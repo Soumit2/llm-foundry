@@ -516,7 +516,7 @@ class GroupedQueryAttention(nn.Module):
 
         if self.reuse_kv_layer_idx is not None:
             self.Wq = build_fc(
-                name=fc_type_name,
+                name='BandLinear',
                 in_features=self.d_model,
                 out_features=self.d_model,
                 fc_kwargs=fc_type,
@@ -526,7 +526,7 @@ class GroupedQueryAttention(nn.Module):
             self.Wq._fused = (0, fuse_splits)
         elif self.fused_qkv:
             self.Wqkv = build_fc(
-                name=fc_type_name,
+                name='BandLinear',
                 in_features=self.d_model,
                 out_features=self.d_model + 2 * self.kv_n_heads * self.head_dim,
                 fc_kwargs=fc_type,
@@ -539,19 +539,19 @@ class GroupedQueryAttention(nn.Module):
             self.Wqkv._fused = (0, fuse_splits)
         else:
             self.Wq = build_fc(
-                name=fc_type_name,
+                name='BandLinear',
                 in_features=self.d_model,
                 out_features=self.d_model,
                 fc_kwargs=fc_type,
             )
             self.Wk = build_fc(
-                name=fc_type_name,
+                name='BandLinear'
                 in_features=self.kv_dim,
                 out_features=self.kv_n_heads * self.head_dim,
                 fc_kwargs=fc_type,
             )
             self.Wv = build_fc(
-                name=fc_type_name,
+                name='BandLinear',
                 in_features=self.kv_dim,
                 out_features=self.kv_n_heads * self.head_dim,
                 fc_kwargs=fc_type,
@@ -586,7 +586,7 @@ class GroupedQueryAttention(nn.Module):
         self.attn_fn = attention_implementations.get(self.attn_impl)
 
         self.out_proj = build_fc(
-            name=fc_type_name,
+            name='BandLinear',
             in_features=self.d_model,
             out_features=self.d_model,
             fc_kwargs=fc_type,
