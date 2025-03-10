@@ -88,17 +88,34 @@ def build_ffn(
     return result
 
 
+# def build_attention_layer(
+#     name: str,
+#     attn_kwargs: dict[str, Any],
+# ):
+#     return construct_from_registry(
+#         name=name,
+#         registry=attention_classes,
+#         pre_validation_function=torch.nn.Module,
+#         kwargs=attn_kwargs,
+#     )
+
 def build_attention_layer(
     name: str,
     attn_kwargs: dict[str, Any],
 ):
+    if name == 'BandMatrix':
+        return BandMatrix(
+            in_features=attn_kwargs['d_model'],
+            out_features=attn_kwargs['d_model'],
+            bandwidth=attn_kwargs.get('bandwidth', 5)  # Example bandwidth
+        )
     return construct_from_registry(
         name=name,
         registry=attention_classes,
         pre_validation_function=torch.nn.Module,
         kwargs=attn_kwargs,
     )
-
+    
 from llmfoundry.custom_layers import BandMatrix 
 from llmfoundry.layers_registry import fcs
 
