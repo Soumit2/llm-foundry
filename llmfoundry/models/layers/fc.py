@@ -45,4 +45,10 @@ class BandMatrix(nn.Module):
         return torch.matmul(x, (self.weight * self.band_mask).T)
 
 # Register the BandMatrix layer in fcs
-fcs.register('bandmatrix', func=BandMatrix)
+fcs.register(
+    "BandMatrix",
+    BandMatrix,
+    in_features=int,
+    out_features=int,
+    bandwidth=int,
+)
