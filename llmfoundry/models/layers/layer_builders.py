@@ -99,7 +99,6 @@ def build_attention_layer(
         kwargs=attn_kwargs,
     )
 
-
 from custom_layers import BandMatrix  # Adjust the import path based on the actual location of custom_layers.py
 from llmfoundry.layers_registry import fcs
 
