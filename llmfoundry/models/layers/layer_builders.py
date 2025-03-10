@@ -99,7 +99,7 @@ def build_attention_layer(
         kwargs=attn_kwargs,
     )
 
-from llnfoundry.custom_layers import BandMatrix  
+from llmfoundry.custom_layers import BandMatrix  
 from llmfoundry.layers_registry import fcs
 
 def build_fc(
