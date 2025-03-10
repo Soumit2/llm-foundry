@@ -517,10 +517,10 @@ class GroupedQueryAttention(nn.Module):
 
         if self.reuse_kv_layer_idx is not None:
             self.Wq = build_fc(
-                name='BandLinear',
+                name='BandMatrix',
                 in_features=self.d_model,
                 out_features=self.d_model,
-                fc_kwargs=fc_type,
+                fc_kwargs={'bandwidth': 5}
             )
             # for param init fn; enables shape based init of fused layers
             fuse_splits = [i * self.head_dim for i in range(1, self.n_heads)]
