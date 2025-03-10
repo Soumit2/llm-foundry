@@ -25,7 +25,7 @@
 # SPDX-License-Identifier: Apache-2.0
 
 import torch
-from torch import nn
+import torch.nn as nn
 from llmfoundry.layers_registry import fcs
 
 from llmfoundry.custom_layers import BandMatrix
