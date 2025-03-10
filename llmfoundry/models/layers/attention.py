@@ -20,6 +20,7 @@ from llmfoundry.layers_registry import (
 )
 from llmfoundry.models.layers.layer_builders import build_fc, build_norm
 from llmfoundry.models.utils.config_defaults import fc_type_defaults
+from llmfoundry.custom_layers import BandMatrix
 
 layer = build_fc(
     name='BandLinear',
@@ -526,10 +527,10 @@ class GroupedQueryAttention(nn.Module):
             self.Wq._fused = (0, fuse_splits)
         elif self.fused_qkv:
             self.Wqkv = build_fc(
-                name='BandLinear',
+                name='BandMatrix',
                 in_features=self.d_model,
                 out_features=self.d_model + 2 * self.kv_n_heads * self.head_dim,
-                fc_kwargs=fc_type,
+                fc_kwargs={'bandwidth': 5},
             )
             # for param init fn; enables shape based init of fused layers
             fuse_splits = [
@@ -539,22 +540,22 @@ class GroupedQueryAttention(nn.Module):
             self.Wqkv._fused = (0, fuse_splits)
         else:
             self.Wq = build_fc(
-                name='BandLinear',
+                name='BandMatrix',
                 in_features=self.d_model,
                 out_features=self.d_model,
-                fc_kwargs=fc_type,
+                fc_kwargs={'bandwidth': 5},
             )
             self.Wk = build_fc(
-                name='BandLinear',
+                name='BandMatrix',
                 in_features=self.kv_dim,
                 out_features=self.kv_n_heads * self.head_dim,
-                fc_kwargs=fc_type,
+                fc_kwargs={'bandwidth': 5},
             )
             self.Wv = build_fc(
-                name='BandLinear',
+                name='BandMatrix',
                 in_features=self.kv_dim,
                 out_features=self.kv_n_heads * self.head_dim,
-                fc_kwargs=fc_type,
+                fc_kwargs={'bandwidth': 5},
             )
             # for param init fn; enables shape based init of fused layers
             q_fuse_splits = [i * self.head_dim for i in range(1, self.n_heads)]
@@ -586,10 +587,10 @@ class GroupedQueryAttention(nn.Module):
         self.attn_fn = attention_implementations.get(self.attn_impl)
 
         self.out_proj = build_fc(
-            name='BandLinear',
+            name='BandMatrix',
             in_features=self.d_model,
             out_features=self.d_model,
-            fc_kwargs=fc_type,
+            fc_kwargs={'bandwidth': 5},
         )
         self.out_proj._is_residual = True
 
