@@ -22,12 +22,12 @@ from llmfoundry.models.layers.layer_builders import build_fc, build_norm
 from llmfoundry.models.utils.config_defaults import fc_type_defaults
 from llmfoundry.custom_layers import BandMatrix
 
-layer = build_fc(
-    name='BandLinear',
-    in_features=128,
-    out_features=64,
-    fc_kwargs={'bandwidth': 2, 'bias': True}
-)
+# layer = build_fc(
+#     name='BandLinear',
+#     in_features=128,
+#     out_features=64,
+#     fc_kwargs={'bandwidth': 2, 'bias': True}
+# )
 
 __all__ = [
     'scaled_multihead_dot_product_attention',
