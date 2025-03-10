@@ -28,7 +28,7 @@ import torch
 from torch import nn
 from llmfoundry.layers_registry import fcs
 
-from custom_layers import BandMatrix
+from llmfoundry.custom_layers import BandMatrix
 
 # Register BandMatrix layer in fcs
 fcs.register('band_matrix', func=BandMatrix)
