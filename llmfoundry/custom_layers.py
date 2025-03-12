@@ -8,7 +8,7 @@ import torch.nn as nn
 class BandMatrix(nn.Module):
     """A custom Band Matrix layer that retains only a banded structure."""
 
-    def __init__(self, in_features: int, out_features: int, bias: bool = True, **kwargs):
+    def __init__(self, in_features: int, out_features: int, bias: bool = False, **kwargs):
         """
         Args:
             in_features (int): Number of input features.
