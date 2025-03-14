@@ -32,4 +32,4 @@ from llmfoundry.custom_layers import BandMatrix
 from llmfoundry.custom_layers_toeplitz import ToeplitzMatrix
 
 fcs.register('band_matrix', func=BandMatrix)
-fc.register('toeplitz_matrix', func = ToeplitzMatrix)
+fcs.register('toeplitz_matrix', func = ToeplitzMatrix)
