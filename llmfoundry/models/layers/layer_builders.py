@@ -127,6 +127,8 @@ def build_fc(
 ):
     if name == 'BandMatrix':
         return BandMatrix(in_features, out_features, **fc_kwargs)
+    else name == 'ToepLitzMatrix':
+        return ToeplitzMatrix(in_features, out_features, **fc_kwargs)
 
     kwargs = {
         'in_features': in_features,
