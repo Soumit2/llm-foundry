@@ -516,21 +516,33 @@ class GroupedQueryAttention(nn.Module):
         self.attn_dropout_p = attn_pdrop
 
         if self.reuse_kv_layer_idx is not None:
+            # self.Wq = build_fc(
+            #     name='BandMatrix',
+            #     in_features=self.d_model,
+            #     out_features=self.d_model,
+            #     fc_kwargs={'bandwidth': 5}
+            # )
             self.Wq = build_fc(
-                name='BandMatrix',
+                name='ToeplitzMatrix',
                 in_features=self.d_model,
                 out_features=self.d_model,
-                fc_kwargs={'bandwidth': 5}
+                fc_kwargs={}
             )
             # for param init fn; enables shape based init of fused layers
             fuse_splits = [i * self.head_dim for i in range(1, self.n_heads)]
             self.Wq._fused = (0, fuse_splits)
         elif self.fused_qkv:
+            # self.Wqkv = build_fc(
+            #     name='BandMatrix',
+            #     in_features=self.d_model,
+            #     out_features=self.d_model + 2 * self.kv_n_heads * self.head_dim,
+            #     fc_kwargs={'bandwidth': 5},
+            # )
             self.Wqkv = build_fc(
-                name='BandMatrix',
+                name='ToeplitzMatrix',
                 in_features=self.d_model,
-                out_features=self.d_model + 2 * self.kv_n_heads * self.head_dim,
-                fc_kwargs={'bandwidth': 5},
+                out_features=self.d_model,
+                fc_kwargs={}
             )
             # for param init fn; enables shape based init of fused layers
             fuse_splits = [
@@ -539,23 +551,41 @@ class GroupedQueryAttention(nn.Module):
             ]
             self.Wqkv._fused = (0, fuse_splits)
         else:
+            # self.Wq = build_fc(
+            #     name='BandMatrix',
+            #     in_features=self.d_model,
+            #     out_features=self.d_model,
+            #     fc_kwargs={'bandwidth': 5},
+            # )
             self.Wq = build_fc(
-                name='BandMatrix',
+                name='ToeplitzMatrix',
                 in_features=self.d_model,
                 out_features=self.d_model,
-                fc_kwargs={'bandwidth': 5},
+                fc_kwargs={}
             )
+            # self.Wk = build_fc(
+            #     name='BandMatrix',
+            #     in_features=self.kv_dim,
+            #     out_features=self.kv_n_heads * self.head_dim,
+            #     fc_kwargs={'bandwidth': 5},
+            # )
             self.Wk = build_fc(
-                name='BandMatrix',
-                in_features=self.kv_dim,
-                out_features=self.kv_n_heads * self.head_dim,
-                fc_kwargs={'bandwidth': 5},
+                name='ToeplitzMatrix',
+                in_features=self.d_model,
+                out_features=self.d_model,
+                fc_kwargs={}
             )
+            # self.Wv = build_fc(
+            #     name='BandMatrix',
+            #     in_features=self.kv_dim,
+            #     out_features=self.kv_n_heads * self.head_dim,
+            #     fc_kwargs={'bandwidth': 5},
+            # )
             self.Wv = build_fc(
-                name='BandMatrix',
-                in_features=self.kv_dim,
-                out_features=self.kv_n_heads * self.head_dim,
-                fc_kwargs={'bandwidth': 5},
+                name='ToeplitzMatrix',
+                in_features=self.d_model,
+                out_features=self.d_model,
+                fc_kwargs={}
             )
             # for param init fn; enables shape based init of fused layers
             q_fuse_splits = [i * self.head_dim for i in range(1, self.n_heads)]
@@ -586,11 +616,17 @@ class GroupedQueryAttention(nn.Module):
 
         self.attn_fn = attention_implementations.get(self.attn_impl)
 
+        # self.out_proj = build_fc(
+        #     name='BandMatrix',
+        #     in_features=self.d_model,
+        #     out_features=self.d_model,
+        #     fc_kwargs={'bandwidth': 5},
+        # )
         self.out_proj = build_fc(
-            name='BandMatrix',
-            in_features=self.d_model,
-            out_features=self.d_model,
-            fc_kwargs={'bandwidth': 5},
+            name = 'ToeplitzMatrix',
+            in_features = self.d_model,
+            out_features = self.d_model,
+            fc_kwargs = {},
         )
         self.out_proj._is_residual = True
 
