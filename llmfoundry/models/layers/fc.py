@@ -29,6 +29,7 @@ import torch.nn as nn
 from llmfoundry.layers_registry import fcs
 
 from llmfoundry.custom_layers import BandMatrix
+from llmfoundry.custom_layers_toeplitz import ToeplitzMatrix
 
-# Register BandMatrix layer in fcs
 fcs.register('band_matrix', func=BandMatrix)
+fc.register('toeplitz_matrix', func = ToeplitzMatrix)
