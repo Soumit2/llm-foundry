@@ -3,7 +3,7 @@ import torch.nn as nn
 
 class ToeplitzMatrix(nn.Module):
 
-    def __init__(self, in_features: int, out_features: int, bias: bool = True):
+    def __init__(self, in_features: int, out_features: int, bias: bool = True, **kwargs):
 
         super().__init__()
         self.in_features = in_features
