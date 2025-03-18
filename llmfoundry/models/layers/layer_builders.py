@@ -117,7 +117,7 @@ def build_attention_layer(
     )
     
 from llmfoundry.custom_layers import BandMatrix 
-from llmfoundry.custom_layers_toeplitz import ToeplitzMatrix
+# from llmfoundry.custom_layers_toeplitz import ToeplitzMatrix
 from llmfoundry.layers_registry import fcs
 
 def build_fc(
