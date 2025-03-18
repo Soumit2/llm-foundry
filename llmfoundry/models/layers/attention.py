@@ -521,7 +521,7 @@ class GroupedQueryAttention(nn.Module):
                 name='BandMatrix',
                 in_features=self.d_model,
                 out_features=self.d_model,
-                fc_kwargs={'bandwidth': 5}
+                fc_kwargs=fc_type,
             )
             # self.Wq = build_fc(
             #     name='ToeplitzMatrix',
@@ -537,7 +537,7 @@ class GroupedQueryAttention(nn.Module):
                 name='BandMatrix',
                 in_features=self.d_model,
                 out_features=self.d_model + 2 * self.kv_n_heads * self.head_dim,
-                fc_kwargs={'bandwidth': 5},
+                fc_kwargs=fc_type,
             )
             # self.Wqkv = build_fc(
             #     name='ToeplitzMatrix',
@@ -556,7 +556,7 @@ class GroupedQueryAttention(nn.Module):
                 name='BandMatrix',
                 in_features=self.d_model,
                 out_features=self.d_model,
-                fc_kwargs={'bandwidth': 5},
+                fc_kwargs= fc_type,
             )
             # self.Wq = build_fc(
             #     name='ToeplitzMatrix',
@@ -568,7 +568,7 @@ class GroupedQueryAttention(nn.Module):
                 name='BandMatrix',
                 in_features=self.kv_dim,
                 out_features=self.kv_n_heads * self.head_dim,
-                fc_kwargs={'bandwidth': 5},
+                fc_kwargs=fc_type,
             )
             # self.Wk = build_fc(
             #     name='ToeplitzMatrix',
@@ -580,7 +580,7 @@ class GroupedQueryAttention(nn.Module):
                 name='BandMatrix',
                 in_features=self.kv_dim,
                 out_features=self.kv_n_heads * self.head_dim,
-                fc_kwargs={'bandwidth': 5},
+                fc_kwargs=fc_type,
             )
             # self.Wv = build_fc(
             #     name='ToeplitzMatrix',
@@ -621,7 +621,7 @@ class GroupedQueryAttention(nn.Module):
             name='BandMatrix',
             in_features=self.d_model,
             out_features=self.d_model,
-            fc_kwargs={'bandwidth': 5},
+            fc_kwargs=fc_type,
         )
         # self.out_proj = build_fc(
         #     name = 'ToeplitzMatrix',
