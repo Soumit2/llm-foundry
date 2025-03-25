@@ -529,11 +529,21 @@ class GroupedQueryAttention(nn.Module):
             fuse_splits = [i * self.head_dim for i in range(1, self.n_heads)]
             self.Wq._fused = (0, fuse_splits)
         elif self.fused_qkv:
+            # self.Wqkv = build_fc(
+            #     name=fc_type_name,
+            #     in_features=self.d_model,
+            #     out_features=self.d_model + 2 * self.kv_n_heads * self.head_dim,
+            #     fc_kwargs=fc_type,
+            # )
             self.Wqkv = build_fc(
-                name=fc_type_name,
+                name='band',  # Can be 'torch', 'te', or 'band'
                 in_features=self.d_model,
                 out_features=self.d_model + 2 * self.kv_n_heads * self.head_dim,
-                fc_kwargs=fc_type,
+                fc_kwargs=fc_type if fc_type_name != "band" else {
+                **fc_type,  
+                "bandwidth": fc_type.get("bandwidth", self.d_model // 4),  
+                "rank": fc_type.get("rank", max(1, self.d_model // 4))
+                },
             )
             # for param init fn; enables shape based init of fused layers
             fuse_splits = [
@@ -580,7 +590,7 @@ class GroupedQueryAttention(nn.Module):
             #     out_features=self.kv_n_heads * self.head_dim,
             #     fc_kwargs=fc_type,
             # )
-            self.Wk = build_fc(
+            self.Wv = build_fc(
                 name='band',  # Can be 'torch', 'te', or 'band'
                 in_features=self.kv_dim,
                 out_features=self.kv_n_heads * self.head_dim,
@@ -619,11 +629,21 @@ class GroupedQueryAttention(nn.Module):
 
         self.attn_fn = attention_implementations.get(self.attn_impl)
 
+        # self.out_proj = build_fc(
+        #     name=fc_type_name,
+        #     in_features=self.d_model,
+        #     out_features=self.d_model,
+        #     fc_kwargs=fc_type,
+        # )
         self.out_proj = build_fc(
-            name=fc_type_name,
+            name='band',  # Can be 'torch', 'te', or 'band'
             in_features=self.d_model,
             out_features=self.d_model,
-            fc_kwargs=fc_type,
+            fc_kwargs=fc_type if fc_type_name != "band" else {
+            **fc_type,  
+            "bandwidth": fc_type.get("bandwidth", self.d_model // 4),  
+            "rank": fc_type.get("rank", max(1, self.d_model // 4))
+            },
         )
         self.out_proj._is_residual = True
 
