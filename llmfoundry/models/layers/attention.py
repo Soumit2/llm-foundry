@@ -485,7 +485,8 @@ class GroupedQueryAttention(nn.Module):
             fc_type = copy.deepcopy(fc_type_defaults)
             fc_type['bias'] = bias
             fc_type['device'] = device
-        fc_type_name = fc_type['name']
+        # fc_type_name = fc_type['name']
+        fc_type_name = 'band'
 
         if self.kv_n_heads <= 0:
             raise ValueError('kv_n_heads should be greater than zero.')
