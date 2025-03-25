@@ -116,8 +116,8 @@ class MPTBlock(nn.Module):
                     'device': device,
                     'bias': not no_bias,
                     **attn_config_subset_for_attn_class,
-                    'rank': rank,
-                    'bandwidth': bandwidth,
+                    # 'rank': rank,
+                    # 'bandwidth': bandwidth,
                 },
             )
             self.norm_2 = None
