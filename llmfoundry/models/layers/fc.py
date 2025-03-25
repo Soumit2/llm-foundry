@@ -4,6 +4,7 @@
 from torch import nn
 
 from llmfoundry.layers_registry import fcs
+from llmfoundry.custom_layers import BandMatrix
 
 fcs.register('torch', func=nn.Linear)
 
