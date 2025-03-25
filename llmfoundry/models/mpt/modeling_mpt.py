@@ -479,27 +479,27 @@ class MPTModel(MPTPreTrainedModel):
 
         log.debug(self)
         log.debug(f'Using {self.config.init_config["name"]} initialization.')
-        # self.attn = GroupedQueryAttention(
-        #     d_model=config.d_model,
-        #     n_heads=config.n_heads,
-        #     kv_n_heads=8,  # Example value for grouped query heads
-        #     attn_impl='flash',  # Or 'torch', depending on your need
-        #     clip_qkv=None,
-        #     qk_ln=False,
-        #     qk_gn=False,
-        #     fused_qkv=True,
-        #     softmax_scale=None,
-        #     attn_pdrop=0.0,
-        #     norm_type='low_precision_layernorm',
-        #     norm_eps=1e-05,
-        #     fc_type=None,
-        #     device=None,
-        #     bias=True,
-        #     sliding_window_size=-1,
-        #     reuse_kv_layer_idx=None,
-        #     attn_logit_softcapping=None,
-        #     kv_dim=None
-        # )
+        self.attn = GroupedQueryAttention(
+            d_model=config.d_model,
+            n_heads=config.n_heads,
+            kv_n_heads=8,  # Example value for grouped query heads
+            attn_impl='flash',  # Or 'torch', depending on your need
+            clip_qkv=None,
+            qk_ln=False,
+            qk_gn=False,
+            fused_qkv=True,
+            softmax_scale=None,
+            attn_pdrop=0.0,
+            norm_type='low_precision_layernorm',
+            norm_eps=1e-05,
+            fc_type='band',
+            device=None,
+            bias=True,
+            sliding_window_size=-1,
+            reuse_kv_layer_idx=None,
+            attn_logit_softcapping=None,
+            kv_dim=None
+        )
 
     @property
     def block_class(self) -> type[MPTBlock]:
