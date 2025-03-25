@@ -6,7 +6,7 @@ from typing import Callable
 import torch
 
 from llmfoundry.utils.registry_utils import create_registry
-
+from llmfoundry.custom_layers import BandMatrix
 _norms_description = (
     """The norms registry is used to register classes that implement normalization layers.
 
@@ -49,6 +49,8 @@ fcs = create_registry(
     entry_points=True,
     description=_fcs_description,
 )
+
+fcs.register('band', func=BandMatrix)
 
 _ffns_description = (
     """The ffns registry is used to register functions that build FFN layers.
