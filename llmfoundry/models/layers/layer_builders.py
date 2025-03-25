@@ -137,7 +137,7 @@ def build_fc(
     # Ensure additional arguments for BandMatrix are passed properly
     if name == "band":  
         kwargs.setdefault("bandwidth", min(in_features, out_features) // 8)
-        kwargs.setdefault("rank", max(1, min(in_features, out_features) // 4))
+        kwargs.setdefault("rank", max(1, min(in_features, out_features) // 16))
 
     return construct_from_registry(
         name=name,
