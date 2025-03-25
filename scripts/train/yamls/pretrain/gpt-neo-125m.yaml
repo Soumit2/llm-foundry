@@ -17,7 +17,7 @@ run_name: ${variables.run_name}
 
 # Model
 model:
-  name: hf_causal_lm
+  name: mpt_causal_lm    # hf_causal_lm
   pretrained_model_name_or_path: EleutherAI/gpt-neo-125M
   config_overrides:
     # WARNING: if setting `pretrained: true`, `max_position_embeddings` must match the
