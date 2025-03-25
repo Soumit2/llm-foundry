@@ -62,8 +62,8 @@ class BandMatrix(nn.Module):
         super().__init__()
         self.in_features = in_features
         self.out_features = out_features
-        self.bandwidth = min(in_features, out_features) // 4
-        self.rank = max(1, min(in_features, out_features) // 4)
+        self.bandwidth = kwargs.get('bandwidth', min(in_features, out_features) // 4)
+        self.rank = kwargs.get('rank', max(1, min(in_features, out_features) // 4))
 
         # Learnable weight matrices for low-rank decomposition
         self.W1 = nn.Parameter(torch.randn(out_features, self.rank))
