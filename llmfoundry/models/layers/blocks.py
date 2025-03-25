@@ -104,15 +104,20 @@ class MPTBlock(nn.Module):
                 eps=norm_eps,
                 device=device,
             )
+            rank = max(1, d_model // 16)
+            bandwidth = d_model // 8
             self.attn = build_attention_layer(
                 name=attn_config['attn_type'],
                 attn_kwargs={
                     'd_model': d_model,
                     'n_heads': n_heads,
-                    'fc_type': fc_type,
+                    # 'fc_type': fc_type,
+                    'fc_type' : 'band'
                     'device': device,
                     'bias': not no_bias,
                     **attn_config_subset_for_attn_class,
+                    'rank': rank,
+                    'bandwidth': bandwidth,
                 },
             )
             self.norm_2 = None
