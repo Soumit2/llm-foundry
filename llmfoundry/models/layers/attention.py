@@ -515,7 +515,7 @@ class GroupedQueryAttention(nn.Module):
             #     fc_kwargs=fc_type,
             # )
             self.Wq = build_fc(
-                name='band',  # Can be 'torch', 'te', or 'band'
+                name=fc_type_name,  # Can be 'torch', 'te', or 'band'
                 in_features=self.d_model,
                 out_features=self.d_model,
                 fc_kwargs=fc_type if fc_type_name != "band" else {
@@ -536,7 +536,7 @@ class GroupedQueryAttention(nn.Module):
             #     fc_kwargs=fc_type,
             # )
             self.Wqkv = build_fc(
-                name='band',  # Can be 'torch', 'te', or 'band'
+                name=fc_type_name,  # Can be 'torch', 'te', or 'band'
                 in_features=self.d_model,
                 out_features=self.d_model + 2 * self.kv_n_heads * self.head_dim,
                 fc_kwargs=fc_type if fc_type_name != "band" else {
@@ -559,7 +559,7 @@ class GroupedQueryAttention(nn.Module):
             #     fc_kwargs=fc_type,
             # )
             self.Wq = build_fc(
-                name='band',  # Can be 'torch', 'te', or 'band'
+                name=fc_type_name,  # Can be 'torch', 'te', or 'band'
                 in_features=self.d_model,
                 out_features=self.d_model,
                 fc_kwargs=fc_type if fc_type_name != "band" else {
@@ -575,7 +575,7 @@ class GroupedQueryAttention(nn.Module):
             #     fc_kwargs=fc_type,
             # )
             self.Wk = build_fc(
-                name='band',  # Can be 'torch', 'te', or 'band'
+                name=fc_type_name,  # Can be 'torch', 'te', or 'band'
                 in_features=self.kv_dim,
                 out_features=self.kv_n_heads * self.head_dim,
                 fc_kwargs=fc_type if fc_type_name != "band" else {
@@ -591,7 +591,7 @@ class GroupedQueryAttention(nn.Module):
             #     fc_kwargs=fc_type,
             # )
             self.Wv = build_fc(
-                name='band',  # Can be 'torch', 'te', or 'band'
+                name=fc_type_name,  # Can be 'torch', 'te', or 'band'
                 in_features=self.kv_dim,
                 out_features=self.kv_n_heads * self.head_dim,
                 fc_kwargs=fc_type if fc_type_name != "band" else {
@@ -636,7 +636,7 @@ class GroupedQueryAttention(nn.Module):
         #     fc_kwargs=fc_type,
         # )
         self.out_proj = build_fc(
-            name='band',  # Can be 'torch', 'te', or 'band'
+            name=fc_type_name,  # Can be 'torch', 'te', or 'band'
             in_features=self.d_model,
             out_features=self.d_model,
             fc_kwargs=fc_type if fc_type_name != "band" else {
