@@ -112,7 +112,7 @@ class MPTBlock(nn.Module):
                     'd_model': d_model,
                     'n_heads': n_heads,
                     # 'fc_type': fc_type,
-                    'fc_type' : 'band'
+                    'fc_type' : 'band',
                     'device': device,
                     'bias': not no_bias,
                     **attn_config_subset_for_attn_class,
