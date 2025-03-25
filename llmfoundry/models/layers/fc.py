@@ -12,3 +12,5 @@ try:
     fcs.register('te', func=te.Linear)
 except:
     pass
+
+fcs.register('band', func=BandMatrix)
