@@ -100,28 +100,6 @@ def build_attention_layer(
     )
 
 
-# def build_fc(
-#     name: str,
-#     in_features: int,
-#     out_features: int,
-#     fc_kwargs: dict[str, Any],
-# ):
-#     kwargs = {
-#         'in_features': in_features,
-#         'out_features': out_features,
-#         **{k: v for k, v in fc_kwargs.items() if k != 'name'},
-#     }
-
-#     return construct_from_registry(
-#         name=name,
-#         registry=fcs,
-#         pre_validation_function=torch.nn.Module,
-#         kwargs=kwargs,
-#     )
-
-from typing import Any
-import torch
-
 def build_fc(
     name: str,
     in_features: int,
@@ -134,14 +112,36 @@ def build_fc(
         **{k: v for k, v in fc_kwargs.items() if k != 'name'},
     }
 
-    # Ensure additional arguments for BandMatrix are passed properly
-    if name == "band":  
-        kwargs.setdefault("bandwidth", min(in_features, out_features) // 8)
-        kwargs.setdefault("rank", max(1, min(in_features, out_features) // 16))
-
     return construct_from_registry(
         name=name,
         registry=fcs,
         pre_validation_function=torch.nn.Module,
         kwargs=kwargs,
     )
+
+from typing import Any
+import torch
+
+# def build_fc(
+#     name: str,
+#     in_features: int,
+#     out_features: int,
+#     fc_kwargs: dict[str, Any],
+# ):
+#     kwargs = {
+#         'in_features': in_features,
+#         'out_features': out_features,
+#         **{k: v for k, v in fc_kwargs.items() if k != 'name'},
+#     }
+
+#     # Ensure additional arguments for BandMatrix are passed properly
+#     if name == "band":  
+#         kwargs.setdefault("bandwidth", min(in_features, out_features) // 8)
+#         kwargs.setdefault("rank", max(1, min(in_features, out_features) // 16))
+
+#     return construct_from_registry(
+#         name=name,
+#         registry=fcs,
+#         pre_validation_function=torch.nn.Module,
+#         kwargs=kwargs,
+#     )
