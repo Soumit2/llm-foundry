@@ -112,6 +112,7 @@ class MPTBlock(nn.Module):
                 attn_kwargs={
                     'd_model': d_model,
                     'n_heads': n_heads,
+                    'kv_n_heads': n_heads,
                     # 'fc_type': fc_type,
                     'fc_type' : 'band',
                     'device': device,
