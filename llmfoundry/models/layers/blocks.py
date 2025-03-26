@@ -107,7 +107,8 @@ class MPTBlock(nn.Module):
             rank = max(1, d_model // 16)
             bandwidth = d_model // 8
             self.attn = build_attention_layer(
-                name=attn_config['attn_type'],
+                # name=attn_config['attn_type'],
+                name = 'grouped_query_attention',
                 attn_kwargs={
                     'd_model': d_model,
                     'n_heads': n_heads,
@@ -116,8 +117,6 @@ class MPTBlock(nn.Module):
                     'device': device,
                     'bias': not no_bias,
                     **attn_config_subset_for_attn_class,
-                    # 'rank': rank,
-                    # 'bandwidth': bandwidth,
                 },
             )
             self.norm_2 = None
