@@ -20,6 +20,7 @@ from llmfoundry.layers_registry import (
 )
 from llmfoundry.models.layers.layer_builders import build_fc, build_norm
 from llmfoundry.models.utils.config_defaults import fc_type_defaults
+from llmfoundry.custom_layers import BandMatrix
 
 __all__ = [
     'scaled_multihead_dot_product_attention',
