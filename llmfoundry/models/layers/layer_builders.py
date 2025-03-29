@@ -100,12 +100,39 @@ def build_attention_layer(
     )
 
 
+# def build_fc(
+#     name: str,
+#     in_features: int,
+#     out_features: int,
+#     fc_kwargs: dict[str, Any],
+# ):
+#     kwargs = {
+#         'in_features': in_features,
+#         'out_features': out_features,
+#         **{k: v for k, v in fc_kwargs.items() if k != 'name'},
+#     }
+
+#     return construct_from_registry(
+#         name=name,
+#         registry=fcs,
+#         pre_validation_function=torch.nn.Module,
+#         kwargs=kwargs,
+#     )
+
+from typing import Any
+import torch
+
 def build_fc(
     name: str,
     in_features: int,
     out_features: int,
     fc_kwargs: dict[str, Any],
 ):
+    if name == 'band':
+        return BandMatrix(in_features, out_features, **fc_kwargs)
+    # elif name == 'ToepLitzMatrix':
+    #     return ToeplitzMatrix(in_features, out_features, **fc_kwargs)
+
     kwargs = {
         'in_features': in_features,
         'out_features': out_features,
@@ -118,10 +145,6 @@ def build_fc(
         pre_validation_function=torch.nn.Module,
         kwargs=kwargs,
     )
-
-from typing import Any
-import torch
-
 # def build_fc(
 #     name: str,
 #     in_features: int,
