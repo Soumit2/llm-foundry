@@ -14,6 +14,7 @@ from llmfoundry.layers_registry import (
     norms,
 )
 from llmfoundry.utils.registry_utils import construct_from_registry
+from llmfoundry.custom_layers import BandMatrix
 
 __all__ = [
     'build_attention_layer',
